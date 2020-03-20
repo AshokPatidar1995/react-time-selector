@@ -1,0 +1,13 @@
+:local(.component) {
+  flex-shrink: 0;
+  position: relative;
+  background-color: #fff;
+}
+:local(.hour) {
+  text-align: right;
+  padding: 2px 5px;
+}
+
+:local(.inner) {
+  transform: translateY(-70%);
+}

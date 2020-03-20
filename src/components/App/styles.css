@@ -1,0 +1,23 @@
+:local(.example) {
+  display: flex;
+  align-items: flex-start;
+  font-family: helvetica, arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.2;
+  max-width: 100%;
+}
+
+:local(.intro) {
+  width: 220px;
+  padding: 20px;
+}
+
+:local(.main) {
+  flex-grow: 1;
+}
+
+:local(.selected) {
+  max-height: 200px;
+  overflow: auto;
+  font-size: 10px;
+}

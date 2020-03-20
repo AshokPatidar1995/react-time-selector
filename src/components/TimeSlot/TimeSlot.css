@@ -1,0 +1,58 @@
+:local(.component) {
+  background-color: rgba(40, 201, 111, 0.7);
+  position: absolute;
+  width: 100%;
+  color: #fff;
+  overflow: hidden;
+  cursor: grab;
+}
+
+:local(.active) {
+  pointer-events: none;
+}
+
+:local(.delete) {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  padding: 0 5px;
+  border: none;
+  background-color: #fff;
+  display: none;
+  font-size: 20px;
+  line-height: 1;
+  color: #999;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+:local(.component):hover :local(.delete) {
+  display: block;
+}
+
+:local(.frozen) {
+  background-color: #d6dfe5;
+  border-left: 1px solid #acacac;
+  color: #3d464d;
+  opacity: 1;
+  cursor: default;
+}
+
+:local(.handle) {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  cursor: ns-resize;
+}
+
+:local(.title) {
+  padding: 0px 5px;
+  font-size: 10px;
+  font-weight: 100;
+  overflow: hidden;
+  max-height: 100%;
+  pointer-events: none;
+  word-wrap: break-word;
+}
