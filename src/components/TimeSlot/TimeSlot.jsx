@@ -73,7 +73,6 @@ export default class TimeSlot extends PureComponent {
       width,
       offset,
       timeZone,
-      title,
       touchToDelete,
     } = this.props;
 
@@ -118,12 +117,6 @@ export default class TimeSlot extends PureComponent {
             lineHeight: `${(MINUTE_IN_PIXELS * 30) - (BOTTOM_GAP / 2)}px`,
           }}
         >
-          {title && (
-            <span>
-              {title}
-              <br />
-            </span>
-          )}
           {this.timespan()}
         </div>
         {!frozen && !touchToDelete && (
@@ -157,7 +150,6 @@ TimeSlot.propTypes = {
   date: PropTypes.instanceOf(Date).isRequired, // The day in which the slot is displayed
   start: PropTypes.instanceOf(Date).isRequired,
   end: PropTypes.instanceOf(Date).isRequired,
-  title: PropTypes.string,
   frozen: PropTypes.bool,
 
   onSizeChangeStart: PropTypes.func,

@@ -18,7 +18,6 @@ function flatten(selections) {
 }
 
 function weekEvents(days, items, timeZone) {
-  console.log({ days, items, timeZone })
   const result = [];
   days.forEach(({ date }) => {
     const startMoment = momentTimezone.tz(date, timeZone).hour(0);
@@ -56,30 +55,12 @@ export default class Week extends PureComponent {
       daySelections: weekEvents(days, initialSelections, timeZone),
     };
     this.handleDayChange = this.handleDayChange.bind(this);
-    this.handleDaysRef = this.handleDaysRef.bind(this);
-    this.setDaysWidth = () => this.setState({
-      daysWidth: this.daysRef.offsetWidth,
-    });
   }
 
   componentWillMount() {
-    window.addEventListener('resize', this.setDaysWidth);
-
     this.setState({
       widthOfAScrollbar: computeWidthOfAScrollbar(),
     });
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.setDaysWidth);
-  }
-
-  handleDaysRef(element) {
-    if (!element) {
-      return;
-    }
-    this.daysRef = element;
-    this.setState({ daysWidth: element.offsetWidth });
   }
 
   handleDayChange(selections) {
@@ -148,10 +129,7 @@ export default class Week extends PureComponent {
           <div className={styles.lines}>
             {this.renderLines()}
           </div>
-          <div
-            className={styles.days}
-            ref={this.handleDaysRef}
-          >
+          <div className={styles.days} >
             <Ruler timeConvention={timeConvention} />
             <Day
               // eslint-disable-next-line react/jsx-boolean-value
