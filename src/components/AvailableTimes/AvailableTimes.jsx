@@ -18,17 +18,14 @@ function flatten(selections) {
 }
 
 export default class AvailableTimes extends PureComponent {
-  constructor(props) {
-    super(props);
-    const { initialSelections, timeZone, weekStartsOn } = props;
+  constructor({ initialSelections }) {
+    super();
     this.state = {
       weeks: [],
       selections: initialSelections,
       availableWidth: 10,
     };
-    this.selections = {};
-    const selected = initialSelections
-    this.selections[0] = selected;
+    this.selections = { 0: initialSelections };
     this.setRef = this.setRef.bind(this);
     this.handleWeekChange = this.handleWeekChange.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);

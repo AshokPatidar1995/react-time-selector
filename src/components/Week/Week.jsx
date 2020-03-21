@@ -10,11 +10,6 @@ import styles from './Week.css';
 
 function flatten(selections) {
   const result = [];
-  // selections.forEach((selectionsInDay) => {
-  //   if (date === "0") {
-  //     result.push(...selectionsInDay);
-  //   }
-  // });
   Object.keys(selections).forEach((date) => {
     if (date === "0") {
       result.push(...selections[date]);
