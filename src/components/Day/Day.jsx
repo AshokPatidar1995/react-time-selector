@@ -54,13 +54,12 @@ export default class Day extends PureComponent {
 
 
   handleDelete({ start, end }) {
-    const { onChange, index } = this.props;
-
+    const { onChange } = this.props;
     this.setState(({ selections }) => {
       for (let i = 0; i < selections.length; i++) {
         if (selections[i].start === start && selections[i].end === end) {
           selections.splice(i, 1);
-          onChange(index, selections);
+          onChange(selections);
           return { selections: selections.slice(0) };
         }
       }
@@ -212,7 +211,7 @@ export default class Day extends PureComponent {
       lastKnownPosition: undefined,
       minLengthInMinutes: undefined,
     });
-    this.props.onChange(this.props.index, this.state.selections);
+    this.props.onChange(this.state.selections);
   }
 
   render() {

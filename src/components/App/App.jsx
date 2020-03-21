@@ -48,6 +48,7 @@ class Test extends Component {
 
   handleChange(selections) {
     this.setState({ selections });
+    console.log({ selections })
   }
 
   render() {
@@ -66,7 +67,6 @@ class Test extends Component {
               onChange={this.handleChange}
               initialSelections={initialSelections}
               recurring={recurring}
-              availableDays={['monday', 'tuesday', 'wednesday', 'thursday', 'friday']}
               availableHourRange={{ start: 1, end: 24 }}
             />
           </div>

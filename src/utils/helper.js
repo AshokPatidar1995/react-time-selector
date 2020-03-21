@@ -136,11 +136,6 @@ export const weekAt = (weekStartsOn, atDate, timeZone) => {
   const end = momentTimezone.tz(date, timeZone);
   end.hour(0);
   return {
-    interval: dateIntervalString(
-      days[0].date,
-      days[days.length - 1].date,
-      timeZone,
-    ),
     days,
     start: start.toDate(),
     end: end.toDate(),

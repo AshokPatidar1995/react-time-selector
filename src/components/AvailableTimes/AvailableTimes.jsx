@@ -2,8 +2,7 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
 
-import { WEEKS_PER_TIMESPAN, DAYS_IN_WEEK } from '../../utils/Constants';
-import Slider from '../Slider/Slider';
+import { DAYS_IN_WEEK } from '../../utils/Constants';
 import Week from '../Week/Week';
 import styles from './AvailableTimes.css';
 import { weekAt, normalizeRecurringSelections, makeRecurring, validateDays } from '../../utils/helper';
@@ -15,16 +14,12 @@ const leftArrowSvg = (
   </svg>
 );
 
-function oneWeekAhead(date, tz) {
-  const m = momentTimezone.tz(date, tz);
-  m.week(m.week() + 1);
-  return m.toDate();
-}
-
 function flatten(selections) {
   const result = [];
   Object.keys(selections).forEach((date) => {
-    result.push(...selections[date]);
+    if (date === "0") {
+      result.push(...selections[date]);
+    }
   });
   return result;
 }
@@ -53,21 +48,15 @@ export default class AvailableTimes extends PureComponent {
       existing.push(selection);
       this.selections[week.start] = existing;
     });
-    this.handleWeekChange = this.handleWeekChange.bind(this);
-    this.moveBack = this.move.bind(this, -1);
-    this.moveForward = this.move.bind(this, 1);
-    this.move = this.move.bind(this);
-    this.handleHomeClick = () => this.setState(({ weeks }) => ({
-      currentWeekIndex: 0,
-    }));
     this.setRef = this.setRef.bind(this);
+    this.handleWeekChange = this.handleWeekChange.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
   }
 
   componentWillMount() {
     window.addEventListener('resize', this.handleWindowResize);
     this.setState({
-      weeks: this.expandWeeks(this.state.weeks, 0),
+      weeks: this.expandWeeks(),
     });
   }
 
@@ -104,65 +93,26 @@ export default class AvailableTimes extends PureComponent {
       availableWidth: this.ref.offsetWidth,
     });
   }
-
-  triggerOnChange() {
-    const { onChange, recurring, timeZone, weekStartsOn } = this.props;
-    const newSelections = flatten(this.selections);
-    if (onChange) {
-      if (recurring) {
-        const startingFirstWeek = newSelections.filter(({ start }) =>
-          start < this.state.weeks[0].end);
-        onChange(startingFirstWeek.map(selection =>
-          makeRecurring(selection, timeZone, weekStartsOn)));
-      } else {
-        onChange(newSelections);
-      }
-    }
-    return newSelections;
-  }
-
-  handleWeekChange(week, weekSelections) {
-    this.selections[week.start] = weekSelections;
+  handleWeekChange(weekSelections) {
+    this.selections[0] = weekSelections;
     const newSelections = this.triggerOnChange();
+    // console.log({ newSelections, weekSelections })
     this.setState({
       selections: newSelections,
     });
   }
-
-  expandWeeks(weeks, weekIndex) {
-    if (weeks.length - weekIndex > WEEKS_PER_TIMESPAN) {
-      // no need to expand
-      return weeks;
+  triggerOnChange() {
+    const { onChange } = this.props;
+    const newSelections = flatten(this.selections);
+    if (onChange) {
+      onChange(newSelections);
     }
-
-    const { weekStartsOn, timeZone } = this.props;
-    let newWeeks = weeks;
-    let addedWeeks = 0;
-    while (addedWeeks < WEEKS_PER_TIMESPAN) {
-      const week = newWeeks.length ?
-        weekAt(weekStartsOn,
-          oneWeekAhead(newWeeks[newWeeks.length - 1].days[3].date, timeZone), timeZone)
-        : weekAt(weekStartsOn, new Date(), timeZone);
-      newWeeks = newWeeks.concat(week);
-      addedWeeks++;
-    }
-    return newWeeks;
+    return newSelections;
   }
 
-  move(increment) {
-    this.setState(({
-      currentWeekIndex,
-      weeks,
-    }) => {
-      const nextIndex = currentWeekIndex + increment;
-      if (nextIndex < 0) {
-        return undefined;
-      }
-      return {
-        weeks: this.expandWeeks(weeks, nextIndex),
-        currentWeekIndex: nextIndex,
-      };
-    });
+  expandWeeks() {
+    const { weekStartsOn, timeZone } = this.props;
+    return weekAt(weekStartsOn, new Date(), timeZone);
   }
 
   render() {
@@ -173,7 +123,6 @@ export default class AvailableTimes extends PureComponent {
       timeZone,
       recurring,
       touchToDeleteSelection,
-      availableDays,
       availableHourRange,
     } = this.props;
 
@@ -183,7 +132,6 @@ export default class AvailableTimes extends PureComponent {
       selections,
       weeks,
     } = this.state;
-
     const homeClasses = [styles.home];
     if (currentWeekIndex !== 0) {
       homeClasses.push(styles.homeActive);
@@ -201,34 +149,19 @@ export default class AvailableTimes extends PureComponent {
           className={styles.inner}
         >
           <div className={styles.main}>
-            <Slider
-              index={currentWeekIndex}
-              onSlide={this.move}
-              disabled={recurring}
-            >
-              {weeks.map((week, i) => {
-                // if ((recurring || Math.abs(i - currentWeekIndex) > 1) && i !== 0) {
-                //   return <span key={week.start} />;
-                // }
-                return (
-                  i === 0 ?
-                    <Week
-                      timeConvention={timeConvention}
-                      timeZone={timeZone}
-                      availableWidth={availableWidth}
-                      key={week.start}
-                      week={week}
-                      initialSelections={selections}
-                      onChange={this.handleWeekChange}
-                      height={height}
-                      recurring={recurring}
-                      touchToDeleteSelection={touchToDeleteSelection}
-                      availableDays={availableDays}
-                      availableHourRange={availableHourRange}
-                    /> : ''
-                );
-              })}
-            </Slider>
+            <Week
+              timeConvention={timeConvention}
+              timeZone={timeZone}
+              availableWidth={availableWidth}
+              key={weeks.start}
+              days={weeks.days}
+              initialSelections={selections}
+              onChange={this.handleWeekChange}
+              height={height}
+              recurring={recurring}
+              touchToDeleteSelection={touchToDeleteSelection}
+              availableHourRange={availableHourRange}
+            />
           </div>
         </div>
         <button
@@ -261,7 +194,6 @@ AvailableTimes.propTypes = {
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   recurring: PropTypes.bool,
   touchToDeleteSelection: PropTypes.bool,
-  availableDays: PropTypes.arrayOf(validateDays),
   availableHourRange: PropTypes.shape({
     start: PropTypes.number,
     end: PropTypes.number,
@@ -272,6 +204,5 @@ AvailableTimes.defaultProps = {
   timeZone: momentTimezone.tz.guess(),
   weekStartsOn: 'sunday',
   touchToDeleteSelection: 'ontouchstart' in window,
-  availableDays: DAYS_IN_WEEK,
   availableHourRange: { start: 0, end: 24 },
 };

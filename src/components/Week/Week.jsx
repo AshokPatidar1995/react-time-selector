@@ -17,9 +17,10 @@ function flatten(selections) {
   return result;
 }
 
-function weekEvents(week, items, timeZone) {
+function weekEvents(days, items, timeZone) {
+  console.log({ days, items, timeZone })
   const result = [];
-  week.days.forEach(({ date }) => {
+  days.forEach(({ date }) => {
     const startMoment = momentTimezone.tz(date, timeZone).hour(0);
     const end = momentTimezone.tz(startMoment, timeZone).date(startMoment.date() + 1).toDate();
     const start = startMoment.toDate();
@@ -49,10 +50,10 @@ function computeWidthOfAScrollbar() {
 }
 
 export default class Week extends PureComponent {
-  constructor({ week, initialSelections, timeZone }) {
+  constructor({ days, initialSelections, timeZone }) {
     super();
     this.state = {
-      daySelections: weekEvents(week, initialSelections, timeZone),
+      daySelections: weekEvents(days, initialSelections, timeZone),
     };
     this.handleDayChange = this.handleDayChange.bind(this);
     this.handleDaysRef = this.handleDaysRef.bind(this);
@@ -81,16 +82,16 @@ export default class Week extends PureComponent {
     this.setState({ daysWidth: element.offsetWidth });
   }
 
-  handleDayChange(dayIndex, selections) {
+  handleDayChange(selections) {
     this.setState(({ daySelections }) => {
       const { onChange } = this.props;
       if (!onChange) {
         return undefined;
       }
       // eslint-disable-next-line no-param-reassign
-      daySelections[dayIndex] = selections;
+      daySelections[0] = selections;
       const flattened = flatten(daySelections);
-      onChange(this.props.week, flattened);
+      onChange(flattened);
       return { daySelections };
     });
   }
@@ -110,15 +111,13 @@ export default class Week extends PureComponent {
   // eslint-disable-next-line class-methods-use-this
   renderLines() {
     const result = [];
-    for (let i = 0; i < 23; i++) {
+    for (let i = 0; i < 24; i++) {
       result.push(
         <div
           key={i}
           className={styles.hour}
-          style={{
-            height: HOUR_IN_PIXELS,
-          }}
-        />,
+          style={{ height: HOUR_IN_PIXELS }}
+        />
       );
     }
     return result;
@@ -126,21 +125,13 @@ export default class Week extends PureComponent {
 
   render() {
     const {
-      week,
+      days,
       availableWidth,
       timeConvention,
       timeZone,
       touchToDeleteSelection,
-      availableDays,
     } = this.props;
     const { daySelections } = this.state;
-
-    const filteredDays = week.days.map((day) => {
-      const updatedDay = day;
-      const dayNameInEnglish = moment(day.date).locale('en').format('dddd').toLowerCase();
-      updatedDay.available = availableDays.includes(dayNameInEnglish);
-      return updatedDay;
-    });
     return (
       <div className={styles.component}>
         <div
@@ -162,22 +153,20 @@ export default class Week extends PureComponent {
             ref={this.handleDaysRef}
           >
             <Ruler timeConvention={timeConvention} />
-            {filteredDays.map((day, i) => (
-              i === 0 ?
-                <Day
-                  available={day.available}
-                  availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) }
-                  timeConvention={timeConvention}
-                  timeZone={timeZone}
-                  index={i}
-                  key={day.date}
-                  date={day.date}
-                  initialSelections={daySelections[i]}
-                  onChange={this.handleDayChange}
-                  hourLimits={this.generateHourLimits()}
-                  touchToDeleteSelection={touchToDeleteSelection}
-                /> : ''
-            ))}
+            <Day
+              // eslint-disable-next-line react/jsx-boolean-value
+              available={true}
+              availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS)}
+              timeConvention={timeConvention}
+              timeZone={timeZone}
+              index={0}
+              key={days[0].date}
+              date={days[0].date}
+              initialSelections={daySelections[0]}
+              onChange={this.handleDayChange}
+              hourLimits={this.generateHourLimits()}
+              touchToDeleteSelection={touchToDeleteSelection}
+            />
           </div>
         </div>
       </div>
@@ -198,16 +187,18 @@ Week.propTypes = {
     offset: PropTypes.number,
     width: PropTypes.number,
   })),
+  onChange: PropTypes.func,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
   })),
-  onChange: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
-  week: PropTypes.object.isRequired,
+  days: PropTypes.arrayOf(PropTypes.shape({
+    start: PropTypes.instanceOf(Date),
+    end: PropTypes.instanceOf(Date)
+  })),
   recurring: PropTypes.bool,
   touchToDeleteSelection: PropTypes.bool,
-  availableDays: PropTypes.arrayOf(validateDays),
   availableHourRange: PropTypes.shape({
     start: PropTypes.number,
     end: PropTypes.number,
