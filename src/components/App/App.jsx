@@ -6,33 +6,32 @@ import styles from './styles.css';
 
 import './reset.css';
 
-function dateAt(dayInWeek, hours, minutes) {
-  const date = new Date();
-  while (date.getDay() > 0) {
-    // reset to sunday
-    date.setDate(date.getDate() - 1);
-  }
-  for (let i = 0; i < dayInWeek; i++) {
-    date.setDate(date.getDate() + 1);
-  }
-  date.setHours(hours, minutes, 0, 0);
-  return moment(date).toISOString();
+function createMomentDate(hour, minute) {
+  const date = moment().utc();
+  date.set({
+    date: date.startOf('week').add(1, 'day').date(),
+    hour,
+    minute,
+    second: 0,
+    millisecond: 0
+  })
+  return date.toISOString();
 }
 
 const TIME_ZONE = 'UTC';
 
 const initialSelections = [
   {
-    start: moment().utc().set({ date: 16, hour: 5, minute: 0, second: 0, millisecond: 0 }).toISOString(),
-    end: moment().utc().set({ date: 16, hour: 6, minute: 0, second: 0, millisecond: 0 }).toISOString(),
+    start: createMomentDate(5, 0),
+    end: createMomentDate(6, 0),
   },
   {
-    start: moment().utc().set({ date: 16, hour: 9, minute: 0, second: 0, millisecond: 0 }).toISOString(),
-    end: moment().utc().set({ date: 16, hour: 11, minute: 0, second: 0, millisecond: 0 }).toISOString(),
+    start: createMomentDate(9, 0),
+    end: createMomentDate(11, 0),
   },
   {
-    start: moment().utc().set({ date: 16, hour: 12, minute: 0, second: 0, millisecond: 0 }).toISOString(),
-    end: moment().utc().set({ date: 16, hour: 13, minute: 0, second: 0, millisecond: 0 }).toISOString(),
+    start: createMomentDate(12, 0),
+    end: createMomentDate(13, 0),
   }
 ];
 
