@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import momentTimezone from 'moment-timezone';
+import moment from 'moment';
 
 import { MINUTE_IN_PIXELS } from '../../utils/Constants';
 import { positionInDay } from '../../utils/helper';
@@ -45,7 +45,7 @@ export default class TimeSlot extends PureComponent {
 
   formatTime(date) {
     const { timeConvention, timeZone, frozen } = this.props;
-    const m = momentTimezone.tz(date, timeZone);
+    const m = moment.tz(date, timeZone);
     if (timeConvention === '12h') {
       if (frozen && m.minute() === 0) {
         return m.format('ha');
@@ -147,9 +147,9 @@ TimeSlot.propTypes = {
   timeZone: PropTypes.string.isRequired,
 
   active: PropTypes.bool, // Whether the time slot is being changed
-  date: PropTypes.instanceOf(Date).isRequired, // The day in which the slot is displayed
-  start: PropTypes.instanceOf(Date).isRequired,
-  end: PropTypes.instanceOf(Date).isRequired,
+  date: PropTypes.string.isRequired, // The day in which the slot is displayed
+  start: PropTypes.string.isRequired,
+  end: PropTypes.string.isRequired,
   frozen: PropTypes.bool,
 
   onSizeChangeStart: PropTypes.func,

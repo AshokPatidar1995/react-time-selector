@@ -1,5 +1,6 @@
-import momentTimezone from 'moment-timezone';
 import moment from 'moment';
+import momentTimezone from 'moment-timezone';
+
 import { HOUR_IN_PIXELS, MINUTE_IN_PIXELS, ONE_WEEK_MINUTES, DAYS_IN_WEEK } from './Constants';
 
 export const getIncludedEvents = (events, dayStart, dayEnd) => {
@@ -83,7 +84,7 @@ export const toDate = (day, pixelsFromTop, timeZone) => {
   const hours = Math.floor(pixelsFromTop / HOUR_IN_PIXELS);
   const minutes = Math.ceil(((pixelsFromTop % HOUR_IN_PIXELS) / HOUR_IN_PIXELS) * 60);
   m.hour(hours).minutes(minutes).seconds(0).milliseconds(0);
-  return m.toDate();
+  return m.toISOString();
 }
 
 export const dateIntervalString = (fromDate, toDate, timeZone) => {
@@ -127,7 +128,7 @@ export const weekAt = (weekStartsOn, atDate, timeZone) => {
   const days = [];
   for (let i = 0; i < 7; i++) {
     days.push({
-      date: date.toDate(),
+      date: date.toISOString(),
       name: date.format('dddd'),
       abbreviated: date.format('ddd'),
     });
@@ -137,8 +138,8 @@ export const weekAt = (weekStartsOn, atDate, timeZone) => {
   end.hour(0);
   return {
     days,
-    start: start.toDate(),
-    end: end.toDate(),
+    start: start.toISOString(),
+    end: end.toISOString(),
   };
 }
 
@@ -162,9 +163,9 @@ export const makeRecurring = ({ start, end }, timeZone, weekStartsOn) => {
   const endM = momentTimezone.tz(end, timeZone).week(0);
 
   weekStart.day(weekStartsOn === 'monday' ? 1 : 0);
-  const weekStartMs = weekStart.toDate().getTime();
-  let startMins = (startM.toDate().getTime() - weekStartMs) / 60000;
-  let endMins = (endM.toDate().getTime() - weekStartMs) / 60000;
+  const weekStartMs = weekStart.toISOString().getTime();
+  let startMins = (startM.toISOString().getTime() - weekStartMs) / 60000;
+  let endMins = (endM.toISOString().getTime() - weekStartMs) / 60000;
 
   if (startMins < 0) {
     // This happens when the event starts on a sunday, but monday is set to
@@ -274,8 +275,8 @@ function flattenGroups(groups) {
 
 function normalize(events, timeZone) {
   return events.map(event => Object.assign({}, event, {
-    start: momentTimezone.tz(event.start, timeZone).toDate(),
-    end: momentTimezone.tz(event.end, timeZone).toDate(),
+    start: momentTimezone.tz(event.start, timeZone).toISOString(),
+    end: momentTimezone.tz(event.end, timeZone).toISOString(),
   }));
 }
 

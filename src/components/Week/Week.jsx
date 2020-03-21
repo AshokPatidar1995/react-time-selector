@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import momentTimezone from 'moment-timezone';
 import moment from 'moment';
 
 import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS, MINUTE_IN_PIXELS } from '../../utils/Constants';
@@ -16,12 +15,11 @@ function flatten(selections) {
   });
   return result;
 }
-
 function weekEvents(days, items, timeZone) {
   const result = [];
   days.forEach(({ date }) => {
-    const startMoment = momentTimezone.tz(date, timeZone).hour(0);
-    const end = momentTimezone.tz(startMoment, timeZone).date(startMoment.date() + 1).toDate();
+    const startMoment = moment.tz(date, timeZone).hour(0);
+    const end = moment.tz(startMoment, timeZone).date(startMoment.date() + 1).toDate();
     const start = startMoment.toDate();
     result.push(getIncludedEvents(items || [], start, end));
   });
@@ -158,8 +156,8 @@ Week.propTypes = {
   timeZone: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.instanceOf(Date),
-    end: PropTypes.instanceOf(Date),
+    start: PropTypes.string,
+    end: PropTypes.string,
   })),
   // eslint-disable-next-line react/forbid-prop-types
   days: PropTypes.arrayOf(PropTypes.shape({

@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-
+import moment from 'moment';
 import { HOUR_IN_PIXELS, MINUTE_IN_PIXELS } from '../../utils/Constants';
 import TimeSlot from '../TimeSlot/TimeSlot';
 import { inSameDay, hasOverlap, toDate, positionInDay } from '../../utils/helper';
 import styles from './Day.css';
 
-const ROUND_TO_NEAREST_MINS = 15;
+const ROUND_TO_NEAREST_MINS = 30;
 
 export default class Day extends PureComponent {
   constructor({ initialSelections }) {
@@ -34,8 +34,8 @@ export default class Day extends PureComponent {
     for (let i = 0; i < selections.length; i++) {
       const selection = selections[i];
       if (
-        selection.start.getTime() <= date.getTime() &&
-        selection.end.getTime() > date.getTime()
+        new Date(moment(selection.start)).getTime() <= new Date(date).getTime() &&
+        new Date(moment(selection.end)).getTime() > new Date(date).getTime()
       ) {
         return true;
       }
@@ -308,10 +308,10 @@ Day.propTypes = {
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
 
-  date: PropTypes.instanceOf(Date).isRequired,
+  date: PropTypes.string,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.instanceOf(Date),
-    end: PropTypes.instanceOf(Date),
+    start: PropTypes.string,
+    end: PropTypes.string,
   })),
   onChange: PropTypes.func.isRequired,
   touchToDeleteSelection: PropTypes.bool,

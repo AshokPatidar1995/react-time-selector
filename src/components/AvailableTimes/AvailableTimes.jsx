@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import momentTimezone from 'moment-timezone';
 
 import Week from '../Week/Week';
 import styles from './AvailableTimes.css';
 import { weekAt } from '../../utils/helper';
+const TIME_ZONE = 'UTC';
 
 
 function flatten(selections) {
@@ -140,14 +140,8 @@ AvailableTimes.propTypes = {
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.oneOfType([
-      PropTypes.instanceOf(Date),
-      PropTypes.number,
-    ]),
-    end: PropTypes.oneOfType([
-      PropTypes.instanceOf(Date),
-      PropTypes.number,
-    ]),
+    start: PropTypes.string,
+    end: PropTypes.string,
   })),
   weekStartsOn: PropTypes.oneOf(['sunday', 'monday']),
   onChange: PropTypes.func,
@@ -161,7 +155,7 @@ AvailableTimes.propTypes = {
 };
 
 AvailableTimes.defaultProps = {
-  timeZone: momentTimezone.tz.guess(),
+  timeZone: TIME_ZONE,
   weekStartsOn: 'sunday',
   touchToDeleteSelection: 'ontouchstart' in window,
   availableHourRange: { start: 0, end: 24 },

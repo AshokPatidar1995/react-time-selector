@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-
+import moment from 'moment';
 import AvailableTimes from '../AvailableTimes/AvailableTimes';
 import styles from './styles.css';
 
@@ -16,10 +16,10 @@ function dateAt(dayInWeek, hours, minutes) {
     date.setDate(date.getDate() + 1);
   }
   date.setHours(hours, minutes, 0, 0);
-  return date;
+  return moment(date).toISOString();
 }
 
-const TIME_ZONE = 'America/Los_Angeles';
+const TIME_ZONE = 'UTC';
 
 const initialSelections = [
   {
