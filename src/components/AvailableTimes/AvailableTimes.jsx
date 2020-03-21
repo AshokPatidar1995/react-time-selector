@@ -2,17 +2,10 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
 
-import { DAYS_IN_WEEK } from '../../utils/Constants';
 import Week from '../Week/Week';
 import styles from './AvailableTimes.css';
-import { weekAt, normalizeRecurringSelections, makeRecurring, validateDays } from '../../utils/helper';
+import { weekAt } from '../../utils/helper';
 
-const leftArrowSvg = (
-  <svg height="24" viewBox="0 0 24 24" width="24">
-    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
-    <path d="M0-.5h24v24H0z" fill="none" />
-  </svg>
-);
 
 function flatten(selections) {
   const result = [];
@@ -27,22 +20,17 @@ function flatten(selections) {
 export default class AvailableTimes extends PureComponent {
   constructor({
     initialSelections = [],
-    recurring,
     timeZone,
     weekStartsOn,
   }) {
     super();
-    const normalizedSelections = recurring ?
-      normalizeRecurringSelections(initialSelections, timeZone, weekStartsOn) :
-      initialSelections;
     this.state = {
       weeks: [],
-      currentWeekIndex: 0,
-      selections: normalizedSelections,
+      selections: initialSelections,
       availableWidth: 10,
     };
     this.selections = {};
-    normalizedSelections.forEach((selection) => {
+    initialSelections.forEach((selection) => {
       const week = weekAt(weekStartsOn, selection.start, timeZone);
       const existing = this.selections[week.start] || [];
       existing.push(selection);
@@ -58,20 +46,6 @@ export default class AvailableTimes extends PureComponent {
     this.setState({
       weeks: this.expandWeeks(),
     });
-  }
-
-  componentWillReceiveProps({ recurring }) {
-    if (recurring === this.props.recurring) {
-      return;
-    }
-    this.setState({ currentWeekIndex: 0 });
-  }
-
-  componentDidUpdate({ recurring }) {
-    if (recurring === this.props.recurring) {
-      return;
-    }
-    this.triggerOnChange();
   }
 
   componentWillUnmount() {
@@ -121,21 +95,15 @@ export default class AvailableTimes extends PureComponent {
       height,
       timeConvention,
       timeZone,
-      recurring,
       touchToDeleteSelection,
       availableHourRange,
     } = this.props;
-
     const {
       availableWidth,
-      currentWeekIndex,
       selections,
       weeks,
     } = this.state;
-    const homeClasses = [styles.home];
-    if (currentWeekIndex !== 0) {
-      homeClasses.push(styles.homeActive);
-    }
+
     return (
       <div
         className={styles.component}
@@ -158,18 +126,11 @@ export default class AvailableTimes extends PureComponent {
               initialSelections={selections}
               onChange={this.handleWeekChange}
               height={height}
-              recurring={recurring}
               touchToDeleteSelection={touchToDeleteSelection}
               availableHourRange={availableHourRange}
             />
           </div>
         </div>
-        <button
-          className={homeClasses.join(' ')}
-          onClick={this.handleHomeClick}
-        >
-          {leftArrowSvg}
-        </button>
       </div>
     );
   }
@@ -192,7 +153,6 @@ AvailableTimes.propTypes = {
   onChange: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  recurring: PropTypes.bool,
   touchToDeleteSelection: PropTypes.bool,
   availableHourRange: PropTypes.shape({
     start: PropTypes.number,

@@ -309,7 +309,6 @@ Day.propTypes = {
   timeZone: PropTypes.string.isRequired,
 
   date: PropTypes.instanceOf(Date).isRequired,
-  index: PropTypes.number.isRequired,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),

@@ -6,7 +6,7 @@ import moment from 'moment';
 import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS, MINUTE_IN_PIXELS } from '../../utils/Constants';
 import Day from '../Day/Day';
 import Ruler from '../Ruler/Ruler';
-import { getIncludedEvents, validateDays } from '../../utils/helper';
+import { getIncludedEvents } from '../../utils/helper';
 import styles from './Week.css';
 
 function flatten(selections) {
@@ -178,15 +178,6 @@ Week.propTypes = {
   availableWidth: PropTypes.number.isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
-  events: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.instanceOf(Date),
-    end: PropTypes.instanceOf(Date),
-    title: PropTypes.string,
-    backgroundColor: PropTypes.string,
-    foregroundColor: PropTypes.string,
-    offset: PropTypes.number,
-    width: PropTypes.number,
-  })),
   onChange: PropTypes.func,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
@@ -197,7 +188,6 @@ Week.propTypes = {
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date)
   })),
-  recurring: PropTypes.bool,
   touchToDeleteSelection: PropTypes.bool,
   availableHourRange: PropTypes.shape({
     start: PropTypes.number,

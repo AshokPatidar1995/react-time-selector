@@ -52,8 +52,6 @@ class Test extends Component {
   }
 
   render() {
-    const { selections, recurring } = this.state;
-    console.log({ selections })
     return (
       <div>
         <div className={styles.example}>
@@ -66,7 +64,6 @@ class Test extends Component {
               start={new Date()}
               onChange={this.handleChange}
               initialSelections={initialSelections}
-              recurring={recurring}
               availableHourRange={{ start: 1, end: 24 }}
             />
           </div>
