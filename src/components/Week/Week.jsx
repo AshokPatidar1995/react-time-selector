@@ -10,8 +10,15 @@ import styles from './Week.css';
 
 function flatten(selections) {
   const result = [];
-  selections.forEach((selectionsInDay) => {
-    result.push(...selectionsInDay);
+  // selections.forEach((selectionsInDay) => {
+  //   if (date === "0") {
+  //     result.push(...selectionsInDay);
+  //   }
+  // });
+  Object.keys(selections).forEach((date) => {
+    if (date === "0") {
+      result.push(...selections[date]);
+    }
   });
   return result;
 }
@@ -49,9 +56,9 @@ function computeWidthOfAScrollbar() {
 export default class Week extends PureComponent {
   constructor({ days, initialSelections, timeZone }) {
     super();
-    this.state = {
-      daySelections: weekEvents(days, initialSelections, timeZone),
-    };
+    const daySelections = weekEvents(days, initialSelections, timeZone)
+    daySelections[0] = initialSelections;
+    this.state = { daySelections };
     this.handleDayChange = this.handleDayChange.bind(this);
   }
 

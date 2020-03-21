@@ -23,19 +23,18 @@ const TIME_ZONE = 'UTC';
 
 const initialSelections = [
   {
-    start: dateAt(1, 12, 15),
-    end: dateAt(1, 14, 0),
+    start: moment().utc().set({ date: 16, hour: 5, minute: 0, second: 0, millisecond: 0 }).toISOString(),
+    end: moment().utc().set({ date: 16, hour: 6, minute: 0, second: 0, millisecond: 0 }).toISOString(),
   },
   {
-    start: dateAt(1, 11, 0),
-    end: dateAt(1, 12, 30),
+    start: moment().utc().set({ date: 16, hour: 9, minute: 0, second: 0, millisecond: 0 }).toISOString(),
+    end: moment().utc().set({ date: 16, hour: 11, minute: 0, second: 0, millisecond: 0 }).toISOString(),
   },
   {
-    start: dateAt(1, 19, 30),
-    end: dateAt(1, 21, 0)
+    start: moment().utc().set({ date: 16, hour: 12, minute: 0, second: 0, millisecond: 0 }).toISOString(),
+    end: moment().utc().set({ date: 16, hour: 13, minute: 0, second: 0, millisecond: 0 }).toISOString(),
   }
 ];
-
 
 class Test extends Component {
   constructor() {
@@ -52,6 +51,7 @@ class Test extends Component {
   }
 
   render() {
+    const { selections } = this.state
     return (
       <div>
         <div className={styles.example}>
@@ -63,7 +63,7 @@ class Test extends Component {
               weekStartsOn="monday"
               start={new Date()}
               onChange={this.handleChange}
-              initialSelections={initialSelections}
+              initialSelections={selections}
               availableHourRange={{ start: 1, end: 24 }}
             />
           </div>

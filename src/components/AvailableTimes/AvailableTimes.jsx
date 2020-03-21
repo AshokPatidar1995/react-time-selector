@@ -18,24 +18,17 @@ function flatten(selections) {
 }
 
 export default class AvailableTimes extends PureComponent {
-  constructor({
-    initialSelections = [],
-    timeZone,
-    weekStartsOn,
-  }) {
-    super();
+  constructor(props) {
+    super(props);
+    const { initialSelections, timeZone, weekStartsOn } = props;
     this.state = {
       weeks: [],
       selections: initialSelections,
       availableWidth: 10,
     };
     this.selections = {};
-    initialSelections.forEach((selection) => {
-      const week = weekAt(weekStartsOn, selection.start, timeZone);
-      const existing = this.selections[week.start] || [];
-      existing.push(selection);
-      this.selections[week.start] = existing;
-    });
+    const selected = initialSelections
+    this.selections[0] = selected;
     this.setRef = this.setRef.bind(this);
     this.handleWeekChange = this.handleWeekChange.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
@@ -45,6 +38,7 @@ export default class AvailableTimes extends PureComponent {
     window.addEventListener('resize', this.handleWindowResize);
     this.setState({
       weeks: this.expandWeeks(),
+      selections: this.triggerOnChange(),
     });
   }
 
@@ -70,7 +64,6 @@ export default class AvailableTimes extends PureComponent {
   handleWeekChange(weekSelections) {
     this.selections[0] = weekSelections;
     const newSelections = this.triggerOnChange();
-    // console.log({ newSelections, weekSelections })
     this.setState({
       selections: newSelections,
     });
@@ -103,7 +96,6 @@ export default class AvailableTimes extends PureComponent {
       selections,
       weeks,
     } = this.state;
-
     return (
       <div
         className={styles.component}
