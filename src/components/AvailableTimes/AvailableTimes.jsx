@@ -18,14 +18,14 @@ function flatten(selections) {
 }
 
 export default class AvailableTimes extends PureComponent {
-  constructor({ initialSelections }) {
+  constructor(props) {
     super();
     this.state = {
       weeks: [],
-      selections: initialSelections,
+      selections: props.initialSelections,
       availableWidth: 10,
     };
-    this.selections = { 0: initialSelections };
+    this.selections = { 0: props.initialSelections };
     this.setRef = this.setRef.bind(this);
     this.handleWeekChange = this.handleWeekChange.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
@@ -38,7 +38,15 @@ export default class AvailableTimes extends PureComponent {
       selections: this.triggerOnChange(),
     });
   }
-
+  //WARNING! To be deprecated in React v17. Use new lifecycle static getDerivedStateFromProps instead.
+  componentWillReceiveProps(nextProps) {
+    let count = 0;
+    if (nextProps.clearSelection && count === 0) {
+      count = 1;
+      this.setState({ selections: []})
+      // const newSelections = this.triggerOnChange();
+    }
+  }
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleWindowResize);
   }
@@ -78,7 +86,6 @@ export default class AvailableTimes extends PureComponent {
     const { weekStartsOn, timeZone } = this.props;
     return weekAt(weekStartsOn, new Date(), timeZone);
   }
-
   render() {
     const {
       width,
@@ -87,6 +94,8 @@ export default class AvailableTimes extends PureComponent {
       timeZone,
       touchToDeleteSelection,
       availableHourRange,
+      clearSelection,
+      changeClearSeleation,
     } = this.props;
     const {
       availableWidth,
@@ -109,7 +118,9 @@ export default class AvailableTimes extends PureComponent {
             <Week
               timeConvention={timeConvention}
               timeZone={timeZone}
+              clearSelection={clearSelection}
               availableWidth={availableWidth}
+              changeClearSeleation={changeClearSeleation}
               key={weeks.start}
               days={weeks.days}
               initialSelections={selections}
@@ -137,6 +148,8 @@ AvailableTimes.propTypes = {
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   touchToDeleteSelection: PropTypes.bool,
+  clearSelection: PropTypes.bool,
+  changeClearSeleation: PropTypes.func,
   availableHourRange: PropTypes.shape({
     start: PropTypes.number,
     end: PropTypes.number,

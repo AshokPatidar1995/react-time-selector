@@ -51,6 +51,7 @@ function computeWidthOfAScrollbar() {
 export default class Week extends PureComponent {
   constructor({ days, initialSelections, timeZone }) {
     super();
+    console.log({ initialSelections, })
     const daySelections = weekEvents(days, initialSelections, timeZone)
     daySelections[0] = initialSelections;
     this.state = { daySelections };
@@ -107,6 +108,8 @@ export default class Week extends PureComponent {
   render() {
     const {
       days,
+      clearSelection,
+      changeClearSeleation,
       availableWidth,
       timeConvention,
       timeZone,
@@ -137,6 +140,8 @@ export default class Week extends PureComponent {
               availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS)}
               timeConvention={timeConvention}
               timeZone={timeZone}
+              clearSelection={clearSelection}
+              changeClearSeleation={changeClearSeleation}
               index={0}
               key={days[0].date}
               date={days[0].date}
@@ -167,6 +172,8 @@ Week.propTypes = {
     end: PropTypes.instanceOf(Date)
   })),
   touchToDeleteSelection: PropTypes.bool,
+  clearSelection: PropTypes.bool,
+  changeClearSeleation: PropTypes.func,
   availableHourRange: PropTypes.shape({
     start: PropTypes.number,
     end: PropTypes.number,

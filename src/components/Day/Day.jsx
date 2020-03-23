@@ -28,6 +28,20 @@ export default class Day extends PureComponent {
       this.mouseTargetRef = element;
     };
   }
+  componentWillReceiveProps(nextProps) {
+    const { onChange, changeClearSeleation } = this.props;
+    if (nextProps.clearSelection) {
+      this.setState(({ selections }) => {
+        for (let i = 0; i < selections.length; i++) {
+          selections.splice(i, 1);
+          onChange(selections);
+          return { selections: [] };
+        }
+        return {};
+      });
+      changeClearSeleation()
+    }
+  }
 
   findSelectionAt(date) {
     const { selections } = this.state;
@@ -159,9 +173,9 @@ export default class Day extends PureComponent {
       let newMinLength = minLengthInMinutes;
       if (edge === 'both') {
         // move element
-        const diff =  new Date(toDate(date, position, timeZone)).getTime() -
+        const diff = new Date(toDate(date, position, timeZone)).getTime() -
           new Date(toDate(date, lastKnownPosition, timeZone)).getTime();
-        
+
         let newStart = new Date(new Date(selection.start).getTime() + diff);
         let newEnd = new Date(new Date(selection.end).getTime() + diff);
         if (hasOverlap(selections, newStart, newEnd, index)) {
@@ -308,7 +322,8 @@ Day.propTypes = {
   }).isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
-
+  clearSelection: PropTypes.bool,
+  changeClearSeleation: PropTypes.func,
   date: PropTypes.string,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.string,

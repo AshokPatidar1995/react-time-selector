@@ -40,13 +40,21 @@ class Test extends Component {
     super();
     this.state = {
       selections: initialSelections,
+      clearSelection: false
     };
     this.handleChange = this.handleChange.bind(this);
+    this.clearSelection = this.clearSelection.bind(this)
+    this.changeClearSeleation = this.changeClearSeleation.bind(this)
   }
 
   handleChange(selections) {
     this.setState({ selections });
-    console.log({ selections })
+  }
+  clearSelection() {
+    this.setState({ selections: [], clearSelection: true });
+  }
+  changeClearSeleation() {
+    this.setState({ clearSelection: false });
   }
 
   render() {
@@ -57,6 +65,8 @@ class Test extends Component {
           <div className={styles.main}>
             <AvailableTimes
               timeConvention="24h"
+              clearSelection={this.state.clearSelection}
+              changeClearSeleation={this.changeClearSeleation}
               timeZone={TIME_ZONE}
               height={750}
               weekStartsOn="monday"
