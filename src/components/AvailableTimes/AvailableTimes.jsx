@@ -207,24 +207,25 @@ export default class AvailableTimes extends PureComponent {
               disabled={recurring}
             >
               {weeks.map((week, i) => {
-                if ((recurring || Math.abs(i - currentWeekIndex) > 1) && i !== 0) {
-                  return <span key={week.start} />;
-                }
+                // if ((recurring || Math.abs(i - currentWeekIndex) > 1) && i !== 0) {
+                //   return <span key={week.start} />;
+                // }
                 return (
-                  <Week
-                    timeConvention={timeConvention}
-                    timeZone={timeZone}
-                    availableWidth={availableWidth}
-                    key={week.start}
-                    week={week}
-                    initialSelections={selections}
-                    onChange={this.handleWeekChange}
-                    height={height}
-                    recurring={recurring}
-                    touchToDeleteSelection={touchToDeleteSelection}
-                    availableDays={availableDays}
-                    availableHourRange={availableHourRange}
-                  />
+                  i === 0 ?
+                    <Week
+                      timeConvention={timeConvention}
+                      timeZone={timeZone}
+                      availableWidth={availableWidth}
+                      key={week.start}
+                      week={week}
+                      initialSelections={selections}
+                      onChange={this.handleWeekChange}
+                      height={height}
+                      recurring={recurring}
+                      touchToDeleteSelection={touchToDeleteSelection}
+                      availableDays={availableDays}
+                      availableHourRange={availableHourRange}
+                    /> : ''
                 );
               })}
             </Slider>

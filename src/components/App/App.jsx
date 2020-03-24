@@ -27,12 +27,12 @@ const initialSelections = [
     end: dateAt(1, 14, 0),
   },
   {
-    start: dateAt(4, 11, 0),
-    end: dateAt(4, 12, 30),
+    start: dateAt(1, 11, 0),
+    end: dateAt(1, 12, 30),
   },
   {
-    start: dateAt(3, 19, 30),
-    end: dateAt(3, 21, 0)
+    start: dateAt(1, 19, 30),
+    end: dateAt(1, 21, 0)
   }
 ];
 

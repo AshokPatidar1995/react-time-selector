@@ -6,7 +6,7 @@ import moment from 'moment';
 import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS, MINUTE_IN_PIXELS } from '../../utils/Constants';
 import Day from '../Day/Day';
 import Ruler from '../Ruler/Ruler';
-import { getIncludedEvents, validateDays  } from '../../utils/helper';
+import { getIncludedEvents, validateDays } from '../../utils/helper';
 import styles from './Week.css';
 
 function flatten(selections) {
@@ -141,7 +141,6 @@ export default class Week extends PureComponent {
       updatedDay.available = availableDays.includes(dayNameInEnglish);
       return updatedDay;
     });
-    console.log({ filteredDays })
     return (
       <div className={styles.component}>
         <div
@@ -164,19 +163,20 @@ export default class Week extends PureComponent {
           >
             <Ruler timeConvention={timeConvention} />
             {filteredDays.map((day, i) => (
-              <Day
-                available={day.available}
-                availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
-                timeConvention={timeConvention}
-                timeZone={timeZone}
-                index={i}
-                key={day.date}
-                date={day.date}
-                initialSelections={daySelections[i]}
-                onChange={this.handleDayChange}
-                hourLimits={this.generateHourLimits()}
-                touchToDeleteSelection={touchToDeleteSelection}
-              />
+              i === 0 ?
+                <Day
+                  available={day.available}
+                  availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) }
+                  timeConvention={timeConvention}
+                  timeZone={timeZone}
+                  index={i}
+                  key={day.date}
+                  date={day.date}
+                  initialSelections={daySelections[i]}
+                  onChange={this.handleDayChange}
+                  hourLimits={this.generateHourLimits()}
+                  touchToDeleteSelection={touchToDeleteSelection}
+                /> : ''
             ))}
           </div>
         </div>
