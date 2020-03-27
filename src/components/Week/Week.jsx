@@ -51,7 +51,6 @@ function computeWidthOfAScrollbar() {
 export default class Week extends PureComponent {
   constructor({ days, initialSelections, timeZone }) {
     super();
-    console.log({ initialSelections, })
     const daySelections = weekEvents(days, initialSelections, timeZone)
     daySelections[0] = initialSelections;
     this.state = { daySelections };

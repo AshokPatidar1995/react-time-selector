@@ -32,9 +32,10 @@ export default class Day extends PureComponent {
     const { onChange, changeClearSeleation } = this.props;
     if (nextProps.clearSelection) {
       this.setState(({ selections }) => {
+
         for (let i = 0; i < selections.length; i++) {
           selections.splice(i, 1);
-          onChange(selections);
+          onChange([]);
           return { selections: [] };
         }
         return {};
