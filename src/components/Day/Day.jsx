@@ -49,8 +49,8 @@ export default class Day extends PureComponent {
     for (let i = 0; i < selections.length; i++) {
       const selection = selections[i];
       if (
-        new Date(moment(selection.start)).getTime() <= new Date(date).getTime() &&
-        new Date(moment(selection.end)).getTime() > new Date(date).getTime()
+        new Date(moment.utc(selection.start, 'H:mm')).getTime() <= new Date(date).getTime() &&
+        new Date(moment.utc(selection.end, 'H:mm')).getTime() > new Date(date).getTime()
       ) {
         return true;
       }
@@ -137,6 +137,7 @@ export default class Day extends PureComponent {
 
     let end = toDate(this.props.date, position + HOUR_IN_PIXELS, timeZone);
     end = hasOverlap(this.state.selections, dateAtPosition, end) || end;
+    console.log({ end, dateAtPosition })
     if (end - dateAtPosition < 1800000) {
       // slot is less than 30 mins
       return;

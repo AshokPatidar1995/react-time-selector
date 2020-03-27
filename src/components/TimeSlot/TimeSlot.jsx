@@ -44,8 +44,8 @@ export default class TimeSlot extends PureComponent {
   }
 
   formatTime(date) {
-    const { timeConvention, timeZone, frozen } = this.props;
-    const m = moment.tz(date, timeZone);
+    const { timeConvention, frozen } = this.props;
+    const m = moment.utc(date, 'H:mm');
     if (timeConvention === '12h') {
       if (frozen && m.minute() === 0) {
         return m.format('ha');

@@ -22,16 +22,16 @@ const TIME_ZONE = 'UTC';
 
 const initialSelections = [
   {
-    start: createMomentDate(5, 0),
-    end: createMomentDate(6, 0),
+    start: '05:00',
+    end: '06:00',
   },
   {
-    start: createMomentDate(9, 0),
-    end: createMomentDate(11, 0),
+    start: '08:00',
+    end: '09:00',
   },
   {
-    start: createMomentDate(12, 0),
-    end: createMomentDate(13, 0),
+    start: '10:00',
+    end: '11:00',
   }
 ];
 
@@ -48,6 +48,7 @@ class Test extends Component {
   }
 
   handleChange(selections) {
+    console.log({ selections })
     this.setState({ selections });
   }
   clearSelection() {

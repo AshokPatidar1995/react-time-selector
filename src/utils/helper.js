@@ -23,13 +23,13 @@ export const positionInDay = (withinDay, date, timeZone) => {
   if (!timeZone) {
     throw new Error('Missing timeZone');
   }
-  if (!inSameDay(date, withinDay, timeZone)) {
-    if (date < withinDay) {
-      return 0;
-    }
-    return 24 * HOUR_IN_PIXELS;
-  }
-  const mom = momentTimezone.tz(date, timeZone);
+  // if (!inSameDay(date, withinDay, timeZone)) {
+  //   if (date < withinDay) {
+  //     return 0;
+  //   }
+  //   return 24 * HOUR_IN_PIXELS;
+  // }
+  const mom = moment.utc(date, 'H:mm');
   return (
     (mom.hours() * HOUR_IN_PIXELS) +
     (mom.minutes() * MINUTE_IN_PIXELS)
@@ -84,12 +84,12 @@ export const toDate = (day, pixelsFromTop, timeZone) => {
   const hours = Math.floor(pixelsFromTop / HOUR_IN_PIXELS);
   const minutes = Math.ceil(((pixelsFromTop % HOUR_IN_PIXELS) / HOUR_IN_PIXELS) * 60);
   m.hour(hours).minutes(minutes).seconds(0).milliseconds(0);
-  return m.toISOString();
+  return m.format('HH:mm');
 }
 
 export const dateIntervalString = (fromDate, toDate, timeZone) => {
-  const from = momentTimezone.tz(fromDate, timeZone);
-  const to = momentTimezone.tz(toDate, timeZone);
+  const from = moment.utc(fromDate, 'H:mm');
+  const to = moment.utc(toDate, 'H:mm');
   if (from.month() === to.month()) {
     return [
       from.format('MMM D'),
