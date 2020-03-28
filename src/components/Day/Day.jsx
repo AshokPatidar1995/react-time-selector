@@ -175,11 +175,10 @@ export default class Day extends PureComponent {
       let newMinLength = minLengthInMinutes;
       if (edge === 'both') {
         // move element
-        const diff = new Date(toDate(date, position, timeZone)).getTime() -
-          new Date(toDate(date, lastKnownPosition, timeZone)).getTime();
+        const diff = moment.utc(toDate(date, position, timeZone), 'H:mm').diff(moment.utc(toDate(date, lastKnownPosition, timeZone), 'H:mm'), 'minutes')
 
-        let newStart = new Date(new Date(selection.start).getTime() + diff);
-        let newEnd = new Date(new Date(selection.end).getTime() + diff);
+        let newStart = moment.utc(selection.start, 'H:mm').add(diff, 'minutes');
+        let newEnd = moment.utc(selection.end, 'H:mm').add(diff, 'minutes');
         if (hasOverlap(selections, newStart, newEnd, index)) {
           return {};
         }
@@ -193,8 +192,8 @@ export default class Day extends PureComponent {
           newEnd = selection.end;
         }
 
-        selection.start = newStart.toISOString();
-        selection.end = newEnd.toISOString();
+        selection.start = newStart.format('H:mm');
+        selection.end = newEnd.format('H:mm');
       } else {
         // stretch element
         const startPos = positionInDay(date, selection.start, timeZone);
