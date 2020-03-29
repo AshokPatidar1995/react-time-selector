@@ -129,15 +129,14 @@ export default class Day extends PureComponent {
   handleMouseDown(e) {
     const { timeZone } = this.props;
     const position = this.relativeY(e.pageY, 60);
-    const dateAtPosition = toDate(this.props.date, position, timeZone);
+    const dateAtPosition = toDate(position, timeZone);
 
     if (this.findSelectionAt(dateAtPosition)) {
       return;
     }
 
-    let end = toDate(this.props.date, position + HOUR_IN_PIXELS, timeZone);
+    let end = toDate(position + HOUR_IN_PIXELS, timeZone);
     end = hasOverlap(this.state.selections, dateAtPosition, end) || end;
-    console.log({ end, dateAtPosition })
     if (end - dateAtPosition < 1800000) {
       // slot is less than 30 mins
       return;
@@ -149,7 +148,7 @@ export default class Day extends PureComponent {
       minLengthInMinutes: 60,
       selections: selections.concat([{
         start: dateAtPosition,
-        end,
+        end: dateAtPosition === '23:00' ? '23:59' : end,
       }]),
     }));
   }
@@ -175,7 +174,7 @@ export default class Day extends PureComponent {
       let newMinLength = minLengthInMinutes;
       if (edge === 'both') {
         // move element
-        const diff = moment.utc(toDate(date, position, timeZone), 'H:mm').diff(moment.utc(toDate(date, lastKnownPosition, timeZone), 'H:mm'), 'minutes')
+        const diff = moment.utc(toDate(position, timeZone), 'H:mm').diff(moment.utc(toDate(lastKnownPosition, timeZone), 'H:mm'), 'minutes')
 
         let newStart = moment.utc(selection.start, 'H:mm').add(diff, 'minutes');
         let newEnd = moment.utc(selection.end, 'H:mm').add(diff, 'minutes');
@@ -202,7 +201,7 @@ export default class Day extends PureComponent {
           // We've exceeded 60 mins now, allow smaller
           newMinLength = 30;
         }
-        const newEnd = toDate(date, Math.max(minPos, position), timeZone);
+        const newEnd = toDate(Math.max(minPos, position), timeZone);
         if (hasOverlap(selections, selection.start, newEnd, index)) {
           // Collision! Let
           return {};

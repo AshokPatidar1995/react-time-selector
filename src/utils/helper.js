@@ -76,11 +76,12 @@ export const hasOverlap = (events, start, end, ignoreIndex) => {
   return undefined;
 }
 
-export const toDate = (day, pixelsFromTop, timeZone) => {
+export const toDate = (pixelsFromTop, timeZone) => {
   if (!timeZone) {
     throw new Error('Missing timeZone');
   }
-  const m = momentTimezone.tz(day, timeZone);
+  // const m = momentTimezone.tz(day, timeZone);
+  const m = moment.utc();
   const hours = Math.floor(pixelsFromTop / HOUR_IN_PIXELS);
   const minutes = Math.ceil(((pixelsFromTop % HOUR_IN_PIXELS) / HOUR_IN_PIXELS) * 60);
   m.hour(hours).minutes(minutes).seconds(0).milliseconds(0);
