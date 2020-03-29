@@ -46,12 +46,12 @@ export default class Day extends PureComponent {
 
   findSelectionAt(date) {
     const { selections } = this.state;
-    console.log({ selections })
     for (let i = 0; i < selections.length; i++) {
       const selection = selections[i];
       if (
-        new Date(moment(selection.start)).getTime() <= new Date(date).getTime() &&
-        new Date(moment(selection.end)).getTime() > new Date(date).getTime()
+        // moment(selection.start, 'H:mm')
+        moment(selection.start, 'H:mm') <= moment(date, 'H:mm') &&
+        moment(selection.end, 'H:mm') > moment(date, 'H:mm')
       ) {
         return true;
       }
@@ -128,15 +128,14 @@ export default class Day extends PureComponent {
   }
 
   handleMouseDown(e) {
-    const { timeZone } = this.props;
     const position = this.relativeY(e.pageY, 60);
-    const dateAtPosition = toDate(this.props.date, position, timeZone);
+    const dateAtPosition = toDate(position);
 
     if (this.findSelectionAt(dateAtPosition)) {
       return;
     }
 
-    let end = toDate(this.props.date, position + HOUR_IN_PIXELS, timeZone);
+    let end = toDate(position + HOUR_IN_PIXELS);
     end = hasOverlap(this.state.selections, dateAtPosition, end) || end;
     if (end - dateAtPosition < 1800000) {
       // slot is less than 30 mins
@@ -149,7 +148,7 @@ export default class Day extends PureComponent {
       minLengthInMinutes: 60,
       selections: selections.concat([{
         start: dateAtPosition,
-        end,
+        end: dateAtPosition === '23:00' ? '00:00' : end,
       }]),
     }));
   }
@@ -168,19 +167,17 @@ export default class Day extends PureComponent {
     if (typeof this.state.index === 'undefined') {
       return;
     }
-    const { date, timeZone } = this.props;
     const position = this.relativeY(pageY);
     this.setState(({ minLengthInMinutes, selections, edge, index, lastKnownPosition, target }) => {
       const selection = selections[index];
-      
+
       let newMinLength = minLengthInMinutes;
       if (edge === 'both') {
         // move element
-        const diff = new Date(toDate(date, position, timeZone)).getTime() -
-          new Date(toDate(date, lastKnownPosition, timeZone)).getTime();
+        const diff = moment.utc(toDate(position), 'H:mm').diff(moment.utc(toDate(lastKnownPosition), 'H:mm'), 'minutes')
 
-        let newStart = new Date(new Date(selection.start).getTime() + diff);
-        let newEnd = new Date(new Date(selection.end).getTime() + diff);
+        let newStart = moment.utc(selection.start, 'H:mm').add(diff, 'minutes')
+        let newEnd = moment.utc(selection.end, 'H:mm').add(diff, 'minutes')
         if (hasOverlap(selections, newStart, newEnd, index)) {
           return {};
         }
@@ -193,8 +190,8 @@ export default class Day extends PureComponent {
           // if has reached bottom blocker and it is going downwards, fix.
           newEnd = selection.end;
         }
-        selection.start = newStart.toISOString();
-        selection.end = newEnd.toISOString();
+        selection.start = newStart.format('H:mm');
+        selection.end = newEnd.format('H:mm');
       } else {
         // stretch element
         const startPos = positionInDay(selection.start);
@@ -203,7 +200,7 @@ export default class Day extends PureComponent {
           // We've exceeded 60 mins now, allow smaller
           newMinLength = 30;
         }
-        const newEnd = toDate(date, Math.max(minPos, position), timeZone);
+        const newEnd = toDate(Math.max(minPos, position));
         if (hasOverlap(selections, selection.start, newEnd, index)) {
           // Collision! Let
           return {};

@@ -1,24 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import moment from 'moment';
 
 import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS, MINUTE_IN_PIXELS } from '../../utils/Constants';
 import Day from '../Day/Day';
 import Ruler from '../Ruler/Ruler';
-import { getIncludedEvents } from '../../utils/helper';
 import styles from './Week.css';
-
-
-function weekEvents(days, items, timeZone) {
-  const result = [];
-  days.forEach(({ date }) => {
-    const startMoment = moment.tz(date, timeZone).hour(0);
-    const end = moment.tz(startMoment, timeZone).date(startMoment.date() + 1).toDate();
-    const start = startMoment.toDate();
-    result.push(getIncludedEvents(items || [], start, end));
-  });
-  return result;
-}
 
 let cachedScrollbarWidth;
 function computeWidthOfAScrollbar() {

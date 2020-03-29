@@ -3,14 +3,12 @@ import React, { PureComponent } from 'react';
 
 import Week from '../Week/Week';
 import styles from './AvailableTimes.css';
-import { weekAt } from '../../utils/helper';
 const TIME_ZONE = 'UTC';
 
 export default class AvailableTimes extends PureComponent {
   constructor(props) {
     super();
     this.state = {
-      weeks: [],
       selections: props.initialSelections,
       availableWidth: 10,
     };
@@ -23,11 +21,9 @@ export default class AvailableTimes extends PureComponent {
   componentWillMount() {
     window.addEventListener('resize', this.handleWindowResize);
     this.setState({
-      weeks: this.expandWeeks(),
       selections: this.triggerOnChange(),
     });
   }
-  //WARNING! To be deprecated in React v17. Use new lifecycle static getDerivedStateFromProps instead.
   componentWillReceiveProps(nextProps) {
     let count = 0;
     if (nextProps.clearSelection && count === 0) {
@@ -71,10 +67,6 @@ export default class AvailableTimes extends PureComponent {
     return newSelections;
   }
 
-  expandWeeks() {
-    const { weekStartsOn, timeZone } = this.props;
-    return weekAt(weekStartsOn, new Date(), timeZone);
-  }
   render() {
     const {
       width,
@@ -109,7 +101,7 @@ export default class AvailableTimes extends PureComponent {
               clearSelection={clearSelection}
               availableWidth={availableWidth}
               changeClearSeleation={changeClearSeleation}
-              key={'weeks.start'}
+              key={'week-key'}
               initialSelections={selections}
               onChange={this.handleWeekChange}
               height={height}
