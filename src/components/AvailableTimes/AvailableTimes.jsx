@@ -89,7 +89,6 @@ export default class AvailableTimes extends PureComponent {
     const {
       availableWidth,
       selections,
-      weeks,
     } = this.state;
     return (
       <div
@@ -110,8 +109,7 @@ export default class AvailableTimes extends PureComponent {
               clearSelection={clearSelection}
               availableWidth={availableWidth}
               changeClearSeleation={changeClearSeleation}
-              key={weeks.start}
-              days={weeks.days}
+              key={'weeks.start'}
               initialSelections={selections}
               onChange={this.handleWeekChange}
               height={height}

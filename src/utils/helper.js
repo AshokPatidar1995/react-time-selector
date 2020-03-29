@@ -19,21 +19,27 @@ export const inSameDay = (dateA, dateB, timeZone) => {
     momentTimezone.tz(dateB, timeZone).format('YYYYMMDD');
 }
 
-export const positionInDay = (withinDay, date, timeZone) => {
-  if (!timeZone) {
-    throw new Error('Missing timeZone');
+export const positionInDay = (date) => {
+  // if (!timeZone) {
+  //   throw new Error('Missing timeZone');
+  // }
+  // if (!inSameDay(date, withinDay, timeZone)) {
+  //   if (date < withinDay) {
+  //     return 0;
+  //   }
+  //   return 24 * HOUR_IN_PIXELS;
+  // }
+  const mom = moment.utc(date);
+  if (mom.hours() == 0 && mom.minute() === 0) {
+    return (
+      (24 * HOUR_IN_PIXELS) + (24 * MINUTE_IN_PIXELS)
+    );
   }
-  if (!inSameDay(date, withinDay, timeZone)) {
-    if (date < withinDay) {
-      return 0;
-    }
-    return 24 * HOUR_IN_PIXELS;
-  }
-  const mom = momentTimezone.tz(date, timeZone);
   return (
     (mom.hours() * HOUR_IN_PIXELS) +
     (mom.minutes() * MINUTE_IN_PIXELS)
   );
+  
 }
 
 function formatTime(date, timeConvention) {

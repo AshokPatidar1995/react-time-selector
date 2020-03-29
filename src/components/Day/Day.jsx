@@ -172,6 +172,7 @@ export default class Day extends PureComponent {
     const position = this.relativeY(pageY);
     this.setState(({ minLengthInMinutes, selections, edge, index, lastKnownPosition, target }) => {
       const selection = selections[index];
+      
       let newMinLength = minLengthInMinutes;
       if (edge === 'both') {
         // move element
@@ -192,12 +193,11 @@ export default class Day extends PureComponent {
           // if has reached bottom blocker and it is going downwards, fix.
           newEnd = selection.end;
         }
-
         selection.start = newStart.toISOString();
         selection.end = newEnd.toISOString();
       } else {
         // stretch element
-        const startPos = positionInDay(date, selection.start, timeZone);
+        const startPos = positionInDay(selection.start);
         const minPos = startPos + (minLengthInMinutes * MINUTE_IN_PIXELS);
         if (minPos < position) {
           // We've exceeded 60 mins now, allow smaller

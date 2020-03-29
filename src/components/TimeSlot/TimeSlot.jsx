@@ -66,18 +66,16 @@ export default class TimeSlot extends PureComponent {
   render() {
     const {
       active,
-      date,
       start,
       end,
       frozen,
       width,
       offset,
-      timeZone,
       touchToDelete,
     } = this.props;
 
-    const top = positionInDay(date, start, timeZone);
-    const bottom = positionInDay(date, end, timeZone);
+    const top = positionInDay(start);
+    const bottom = positionInDay(end);
 
     const height = Math.max(
       bottom - top - (frozen ? BOTTOM_GAP : 0),

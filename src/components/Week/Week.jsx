@@ -41,7 +41,7 @@ function computeWidthOfAScrollbar() {
 }
 
 export default class Week extends PureComponent {
-  constructor({ days, initialSelections, timeZone }) {
+  constructor({ initialSelections }) {
     super();
     this.state = { daySelections: initialSelections };
     this.handleDayChange = this.handleDayChange.bind(this);
@@ -95,7 +95,6 @@ export default class Week extends PureComponent {
 
   render() {
     const {
-      days,
       clearSelection,
       changeClearSeleation,
       availableWidth,
@@ -131,8 +130,8 @@ export default class Week extends PureComponent {
               clearSelection={clearSelection}
               changeClearSeleation={changeClearSeleation}
               index={0}
-              key={days[0].date}
-              date={days[0].date}
+              key={'2020-03-23T00:00:00.000Z'}
+              date={'2020-03-23T00:00:00.000Z'}
               initialSelections={daySelections}
               onChange={this.handleDayChange}
               hourLimits={this.generateHourLimits()}
@@ -153,11 +152,6 @@ Week.propTypes = {
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.string,
     end: PropTypes.string,
-  })),
-  // eslint-disable-next-line react/forbid-prop-types
-  days: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.instanceOf(Date),
-    end: PropTypes.instanceOf(Date)
   })),
   touchToDeleteSelection: PropTypes.bool,
   clearSelection: PropTypes.bool,
