@@ -46,6 +46,7 @@ export default class Day extends PureComponent {
 
   findSelectionAt(date) {
     const { selections } = this.state;
+    console.log({ selections })
     for (let i = 0; i < selections.length; i++) {
       const selection = selections[i];
       if (

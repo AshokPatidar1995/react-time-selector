@@ -48,6 +48,7 @@ class Test extends Component {
   }
 
   handleChange(selections) {
+    console.log({ selections })
     this.setState({ selections });
   }
   clearSelection() {

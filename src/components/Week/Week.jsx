@@ -8,15 +8,7 @@ import Ruler from '../Ruler/Ruler';
 import { getIncludedEvents } from '../../utils/helper';
 import styles from './Week.css';
 
-function flatten(selections) {
-  const result = [];
-  Object.keys(selections).forEach((date) => {
-    if (date === "0") {
-      result.push(...selections[date]);
-    }
-  });
-  return result;
-}
+
 function weekEvents(days, items, timeZone) {
   const result = [];
   days.forEach(({ date }) => {
@@ -51,9 +43,7 @@ function computeWidthOfAScrollbar() {
 export default class Week extends PureComponent {
   constructor({ days, initialSelections, timeZone }) {
     super();
-    const daySelections = weekEvents(days, initialSelections, timeZone)
-    daySelections[0] = initialSelections;
-    this.state = { daySelections };
+    this.state = { daySelections: initialSelections };
     this.handleDayChange = this.handleDayChange.bind(this);
   }
 
@@ -70,9 +60,8 @@ export default class Week extends PureComponent {
         return undefined;
       }
       // eslint-disable-next-line no-param-reassign
-      daySelections[0] = selections;
-      const flattened = flatten(daySelections);
-      onChange(flattened);
+      daySelections = selections;
+      onChange(daySelections);
       return { daySelections };
     });
   }
@@ -144,7 +133,7 @@ export default class Week extends PureComponent {
               index={0}
               key={days[0].date}
               date={days[0].date}
-              initialSelections={daySelections[0]}
+              initialSelections={daySelections}
               onChange={this.handleDayChange}
               hourLimits={this.generateHourLimits()}
               touchToDeleteSelection={touchToDeleteSelection}

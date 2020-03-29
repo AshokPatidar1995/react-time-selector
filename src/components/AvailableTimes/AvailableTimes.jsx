@@ -6,17 +6,6 @@ import styles from './AvailableTimes.css';
 import { weekAt } from '../../utils/helper';
 const TIME_ZONE = 'UTC';
 
-
-function flatten(selections) {
-  const result = [];
-  Object.keys(selections).forEach((date) => {
-    if (date === "0") {
-      result.push(...selections[date]);
-    }
-  });
-  return result;
-}
-
 export default class AvailableTimes extends PureComponent {
   constructor(props) {
     super();
@@ -25,7 +14,7 @@ export default class AvailableTimes extends PureComponent {
       selections: props.initialSelections,
       availableWidth: 10,
     };
-    this.selections = { 0: props.initialSelections };
+    this.selections = props.initialSelections;
     this.setRef = this.setRef.bind(this);
     this.handleWeekChange = this.handleWeekChange.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
@@ -67,7 +56,7 @@ export default class AvailableTimes extends PureComponent {
     });
   }
   handleWeekChange(weekSelections) {
-    this.selections[0] = weekSelections;
+    this.selections = weekSelections;
     const newSelections = this.triggerOnChange();
     this.setState({
       selections: newSelections,
@@ -75,7 +64,7 @@ export default class AvailableTimes extends PureComponent {
   }
   triggerOnChange() {
     const { onChange } = this.props;
-    const newSelections = flatten(this.selections);
+    const newSelections = this.selections;
     if (onChange) {
       onChange(newSelections);
     }
