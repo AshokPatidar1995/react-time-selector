@@ -107,7 +107,7 @@ export default class TimeSlot extends PureComponent {
       <div
         className={classes.join(' ')}
         style={style}
-        onMouseDown={frozen || touchToDelete ? undefined : this.handleMouseDown}
+        // onMouseDown={frozen || touchToDelete ? undefined : this.handleMouseDown}
         onClick={frozen || !touchToDelete ? undefined : this.handleDelete}
       >
         <div

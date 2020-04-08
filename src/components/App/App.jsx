@@ -6,18 +6,6 @@ import styles from './styles.css';
 
 import './reset.css';
 
-function createMomentDate(hour, minute) {
-  const date = moment().utc();
-  date.set({
-    date: date.startOf('week').add(1, 'day').date(),
-    hour,
-    minute,
-    second: 0,
-    millisecond: 0
-  })
-  return date.toISOString();
-}
-
 const TIME_ZONE = 'UTC';
 
 const initialSelections = [
@@ -26,12 +14,12 @@ const initialSelections = [
     end: '06:00',
   },
   {
-    start: '08:00',
-    end: '09:00',
+    start: '09:00',
+    end: '11:00',
   },
   {
-    start: '10:00',
-    end: '11:00',
+    start: '12:00',
+    end: '13:00'
   }
 ];
 

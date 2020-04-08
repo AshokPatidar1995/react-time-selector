@@ -206,7 +206,7 @@ export default class Day extends PureComponent {
           // Collision! Let
           return {};
         }
-        selection.end = newEnd;
+        selection.end = newEnd === '23:30' ? '23:59' : newEnd;
       }
       return {
         lastKnownPosition: position,
@@ -226,7 +226,18 @@ export default class Day extends PureComponent {
       lastKnownPosition: undefined,
       minLengthInMinutes: undefined,
     });
-    this.props.onChange(this.state.selections);
+    const selections = this.state.selections
+    const changes = selections.map((selection) => {
+      const data = {
+        start: selection.start,
+        end: selection.end === '23:59' || selection.end === '00:00' ? '23:45' : selection.end,
+      };
+      if (selection.id) {
+        data.id = selection.id;
+      }
+      return data;
+    })
+    this.props.onChange(changes);
   }
 
   render() {
