@@ -46,6 +46,14 @@
   text-align: center;
   cursor: ns-resize;
 }
+:local(.topHandle) {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  cursor: ns-resize;
+}
 
 :local(.title) {
   padding: 0px 5px;

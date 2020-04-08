@@ -13,6 +13,7 @@ export default class TimeSlot extends PureComponent {
     super();
     this.handleResizerMouseDown = this.handleResizerMouseDown.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleResizerMouseUp = this.handleResizerMouseUp.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.preventMove = e => e.stopPropagation();
   }
@@ -34,8 +35,13 @@ export default class TimeSlot extends PureComponent {
 
   handleResizerMouseDown(event) {
     event.stopPropagation();
-    const { onSizeChangeStart, end, start } = this.props;
-    onSizeChangeStart({ end, start }, event);
+    const { onSizeChangeEndTime, end, start } = this.props;
+    onSizeChangeEndTime({ end, start }, event);
+  }
+  handleResizerMouseUp(event) {
+    event.stopPropagation();
+    const { onSizeChangeStartTime, end, start } = this.props;
+    onSizeChangeStartTime({ end, start }, event);
   }
 
   handleMouseDown(event) {
@@ -110,6 +116,16 @@ export default class TimeSlot extends PureComponent {
         // onMouseDown={frozen || touchToDelete ? undefined : this.handleMouseDown}
         onClick={frozen || !touchToDelete ? undefined : this.handleDelete}
       >
+        {!frozen && !touchToDelete && (
+          <div>
+            <div
+              className={styles.topHandle}
+              onMouseDown={this.handleResizerMouseUp}
+            >
+              ...
+            </div>
+          </div>
+        )}
         <div
           className={styles.title}
           style={{
@@ -152,7 +168,8 @@ TimeSlot.propTypes = {
   end: PropTypes.string.isRequired,
   frozen: PropTypes.bool,
 
-  onSizeChangeStart: PropTypes.func,
+  onSizeChangeEndTime: PropTypes.func,
+  onSizeChangeStartTime: PropTypes.func,
   onMoveStart: PropTypes.func,
   onDelete: PropTypes.func,
 

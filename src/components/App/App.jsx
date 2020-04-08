@@ -10,16 +10,8 @@ const TIME_ZONE = 'UTC';
 
 const initialSelections = [
   {
-    start: '05:00',
-    end: '06:00',
-  },
-  {
-    start: '09:00',
-    end: '11:00',
-  },
-  {
     start: '12:00',
-    end: '13:00'
+    end: '16:00',
   }
 ];
 

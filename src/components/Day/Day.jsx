@@ -22,6 +22,7 @@ export default class Day extends PureComponent {
     this.handleTouchMove = this.handleTouchMove.bind(this);
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.handleSizeChangeStart = this.handleItemModification.bind(this, 'end');
+    this.handleSizeChangeStartTime = this.handleItemModification.bind(this, 'start');
     this.handleMoveStart = this.handleItemModification.bind(this, 'both');
     this.handleDelete = this.handleDelete.bind(this);
     this.handleMouseTargetRef = (element) => {
@@ -49,9 +50,16 @@ export default class Day extends PureComponent {
     for (let i = 0; i < selections.length; i++) {
       const selection = selections[i];
       if (
-        new Date(moment.utc(selection.start, 'H:mm')).getTime() <= new Date(date).getTime() &&
-        new Date(moment.utc(selection.end, 'H:mm')).getTime() > new Date(date).getTime()
+        moment.utc(selection.start, 'H:mm') <= moment.utc(date, 'H:mm') &&
+        moment.utc(selection.end, 'H:mm') > moment.utc(date, 'H:mm')
       ) {
+        const { onChange } = this.props;
+        const newSelection = selections.concat([{
+          start: moment.utc(selection.end, 'H:mm').format('HH:mm'),
+          end: moment.utc(selection.end, 'H:mm').add(30, 'minutes').format('HH:mm'),
+        }])
+        this.setState({ selections: newSelection });
+        onChange(newSelection);
         return true;
       }
     }
@@ -130,7 +138,6 @@ export default class Day extends PureComponent {
     const { timeZone } = this.props;
     const position = this.relativeY(e.pageY, 60);
     const dateAtPosition = toDate(position, timeZone);
-
     if (this.findSelectionAt(dateAtPosition)) {
       return;
     }
@@ -193,6 +200,20 @@ export default class Day extends PureComponent {
 
         selection.start = newStart.format('H:mm');
         selection.end = newEnd.format('H:mm');
+      } else if (edge === 'start') {
+        // stretch element
+        const startPos = positionInDay(date, selection.start, timeZone);
+        const minPos = startPos - (minLengthInMinutes * MINUTE_IN_PIXELS);
+        if (minPos < position) {
+          // We've exceeded 60 mins now, allow smaller
+          newMinLength = 30;
+        }
+        const newStart = toDate(Math.max(minPos, position), timeZone);
+        if (hasOverlap(selections, selection.end, newStart, index)) {
+          // Collision! Let
+          return {};
+        }
+        selection.start = newStart;
       } else {
         // stretch element
         const startPos = positionInDay(date, selection.start, timeZone);
@@ -311,7 +332,8 @@ export default class Day extends PureComponent {
             start={start}
             end={end}
             active={typeof index !== 'undefined'}
-            onSizeChangeStart={this.handleSizeChangeStart}
+            onSizeChangeEndTime={this.handleSizeChangeStart}
+            onSizeChangeStartTime={this.handleSizeChangeStartTime}
             onMoveStart={this.handleMoveStart}
             onDelete={this.handleDelete}
             touchToDelete={touchToDeleteSelection}
