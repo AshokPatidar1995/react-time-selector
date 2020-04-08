@@ -68,10 +68,6 @@ export const hasOverlap = (events, start, end, ignoreIndex) => {
       // overlapping end
       return selection.end;
     }
-    if (selection.start <= start && selection.end >= end) {
-      // inside
-      return selection.start;
-    }
   }
   return undefined;
 }

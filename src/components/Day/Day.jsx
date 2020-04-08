@@ -208,8 +208,11 @@ export default class Day extends PureComponent {
           // We've exceeded 60 mins now, allow smaller
           newMinLength = 30;
         }
-        const newStart = toDate(Math.max(minPos, position), timeZone);
-        if (hasOverlap(selections, selection.end, newStart, index)) {
+        let newStart = toDate(Math.max(minPos, position), timeZone);
+        if (moment.utc(selection.end, 'HH:mm').subtract(30, 'minutes').format('HH:mm') <= newStart) {
+          newStart = moment.utc(selection.end, 'HH:mm').subtract(30, 'minutes').format('HH:mm');
+        }
+        if (hasOverlap(selections, newStart, selection.end, index)) {
           // Collision! Let
           return {};
         }
