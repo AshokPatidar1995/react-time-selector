@@ -12,6 +12,10 @@ const initialSelections = [
   {
     start: '12:00',
     end: '16:00',
+  },
+  {
+    start: '18:00',
+    end: '20:00',
   }
 ];
 
@@ -44,7 +48,7 @@ class Test extends Component {
         <div className={styles.example}>
           <div className={styles.main}>
             <AvailableTimes
-              timeConvention="24h"
+              timeConvention="12h"
               clearSelection={this.state.clearSelection}
               changeClearSeleation={this.changeClearSeleation}
               timeZone={TIME_ZONE}
@@ -57,6 +61,7 @@ class Test extends Component {
             />
           </div>
         </div>
+        <button onClick={this.clearSelection} >Clear</button>
       </div>
     );
   }

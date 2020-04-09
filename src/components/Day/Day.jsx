@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import moment from 'moment';
+import { uniqBy } from 'lodash';
 import { HOUR_IN_PIXELS, MINUTE_IN_PIXELS } from '../../utils/Constants';
 import TimeSlot from '../TimeSlot/TimeSlot';
 import { inSameDay, hasOverlap, toDate, positionInDay } from '../../utils/helper';
@@ -50,14 +51,17 @@ export default class Day extends PureComponent {
     for (let i = 0; i < selections.length; i++) {
       const selection = selections[i];
       if (
-        moment.utc(selection.start, 'H:mm') <= moment.utc(date, 'H:mm') &&
-        moment.utc(selection.end, 'H:mm') > moment.utc(date, 'H:mm')
+        moment.utc(selection.start, 'HH:mm').format('HH:mm') <= moment.utc(date, 'H:mm').format('HH:mm') &&
+        moment.utc(selection.end, 'H:mm').format('HH:mm') > moment.utc(date, 'H:mm').format('HH:mm')
       ) {
         const { onChange } = this.props;
-        const newSelection = selections.concat([{
-          start: moment.utc(selection.end, 'H:mm').format('HH:mm'),
-          end: moment.utc(selection.end, 'H:mm').add(30, 'minutes').format('HH:mm'),
-        }])
+        let newSelection = selections
+        if (moment.utc(selection.start, 'H:mm').format('HH:mm') > '23:45') {
+          newSelection = selections.concat([{
+            start: moment.utc(selection.start, 'H:mm').format('HH:mm'),
+            end: moment.utc(selection.end, 'H:mm').add(30, 'minutes').format('HH:mm'),
+          }])
+        }
         this.setState({ selections: newSelection });
         onChange(newSelection);
         return true;
@@ -216,7 +220,7 @@ export default class Day extends PureComponent {
           // Collision! Let
           return {};
         }
-        selection.start = newStart;
+        selection.start = moment.utc(newStart, 'HH:mm').format('HH:mm');
       } else {
         // stretch element
         const startPos = positionInDay(date, selection.start, timeZone);
@@ -250,8 +254,7 @@ export default class Day extends PureComponent {
       lastKnownPosition: undefined,
       minLengthInMinutes: undefined,
     });
-    const selections = this.state.selections
-    const changes = selections.map((selection) => {
+    const changes = this.state.selections.map((selection) => {
       const data = {
         start: selection.start,
         end: selection.end === '23:59' || selection.end === '00:00' ? '23:45' : selection.end,
@@ -260,8 +263,9 @@ export default class Day extends PureComponent {
         data.id = selection.id;
       }
       return data;
-    })
-    this.props.onChange(changes);
+    });
+    this.setState({ selections: uniqBy(changes, 'start') })
+    this.props.onChange(uniqBy(changes, 'start'));
   }
 
   render() {
