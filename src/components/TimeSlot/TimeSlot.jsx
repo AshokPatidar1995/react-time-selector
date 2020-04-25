@@ -107,6 +107,7 @@ export default class TimeSlot extends PureComponent {
       style.width = `calc(${width * 100}% - 5px)`;
       style.left = `${offset * 100}%`;
     }
+    console.log({style})
 
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions

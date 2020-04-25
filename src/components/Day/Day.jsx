@@ -47,6 +47,7 @@ export default class Day extends PureComponent {
   }
 
   findSelectionAt(date) {
+    console.log("findSelectionAt")
     const { selections } = this.state;
     for (let i = 0; i < selections.length; i++) {
       const selection = selections[i];
@@ -125,6 +126,7 @@ export default class Day extends PureComponent {
   }
 
   handleTouchEnd() {
+    console.log("handleTouchEnd")
     const { startY, currentY, startX, currentX } = this.touch;
     if (
       Math.abs(startX - (currentX || startX)) < 20 &&
@@ -139,6 +141,7 @@ export default class Day extends PureComponent {
   }
 
   handleMouseDown(e) {
+    console.log("handleMouseDown")
     const { timeZone } = this.props;
     const position = this.relativeY(e.pageY, 60);
     const dateAtPosition = toDate(position, timeZone);
@@ -292,28 +295,10 @@ export default class Day extends PureComponent {
 
     return (
       <div
-        className={classes.join(' ')}
-        style={{
-          height: HOUR_IN_PIXELS * 24,
-          width: availableWidth,
-        }}
+       
       >
-        <div
-          className={`${styles.grayed} ${styles.block}`}
-          style={{
-            height: hourLimits.top,
-            top: 0,
-          }}
-        />
-        <div
-          className={`${styles.grayed} ${styles.block}`}
-          style={{
-            height: hourLimits.bottomHeight,
-            top: hourLimits.bottom,
-          }}
-        />
-        {available && (
-          <div
+    
+           <div
             onMouseDown={this.handleMouseDown}
             onMouseUp={this.handleMouseUp}
             onMouseMove={this.handleMouseMove}
@@ -327,8 +312,7 @@ export default class Day extends PureComponent {
               top: hourLimits.top,
               height: hourLimits.difference,
             }}
-          />
-        )}
+          ></div>
         {selections.map(({ start, end }, i) => (
           <TimeSlot
             // eslint-disable-next-line react/no-array-index-key
